@@ -1,10 +1,13 @@
 package kr.co.ldcc.contentsservice.adpater
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.container_recyclerview_item.view.*
@@ -21,10 +24,21 @@ class VerticalAdapter(context: Context) : RecyclerView.Adapter<VerticalAdapter.V
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var title: TextView
         var recyclerView : RecyclerView
+        var buttonGrid : Button
+        var buttonLinear : Button
         init {
             // 뷰 객체에 대한 참조. (hold strong reference)
             title = itemView.textView
+            title.text="test1"
             recyclerView = itemView.recyclerViewHorizontal
+            buttonGrid = itemView.buttonGrid
+            buttonLinear = itemView.buttonLinear
+            buttonGrid.setOnClickListener{
+                recyclerView.layoutManager = GridLayoutManager(context, 3)
+            }
+            buttonLinear.setOnClickListener{
+                recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false )
+            }
         }
     }
 
@@ -37,9 +51,7 @@ class VerticalAdapter(context: Context) : RecyclerView.Adapter<VerticalAdapter.V
 
     // 3. onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        holder.title.text= "test"
-
+//        holder.title.text= "test"
         var horizontalAdapter = HorizontalAdapter()
         holder.recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         holder.recyclerView.adapter = horizontalAdapter
