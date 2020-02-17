@@ -13,23 +13,27 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.container_recyclerview_item.view.*
 import kr.co.ldcc.contentsservice.R
 
-class VerticalAdapter(context: Context) : RecyclerView.Adapter<VerticalAdapter.ViewHolder>() {
+class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) : RecyclerView.Adapter<VerticalAdapter.ViewHolder>() {
+
+    private val subjects : Array<String> = arrayOf("동영상","이미지","동영상/이미")
     private var context : Context
+    private var layoutVos : ArrayList<Any?>
 
     init {
         this.context = context
+        this.layoutVos = layoutVos
     }
+
     // 2. 아이템 뷰를 저장하는 뷰홀더 클래스.
     // itemView에 리스너 생성
     inner class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var title: TextView
+        var textViewTitle: TextView
         var recyclerView : RecyclerView
         var buttonGrid : Button
         var buttonLinear : Button
         init {
             // 뷰 객체에 대한 참조. (hold strong reference)
-            title = itemView.textView
-            title.text="test1"
+            textViewTitle = itemView.textViewTitle
             recyclerView = itemView.recyclerViewHorizontal
             buttonGrid = itemView.buttonGrid
             buttonLinear = itemView.buttonLinear
@@ -52,16 +56,25 @@ class VerticalAdapter(context: Context) : RecyclerView.Adapter<VerticalAdapter.V
     // 3. onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 //        holder.title.text= "test"
-        var horizontalAdapter = HorizontalAdapter()
+        holder.textViewTitle.text = subjects[position]
+        Log.d("test",subjects[position])
+
+        var horizontalAdapter = HorizontalAdapter(layoutVos.get(position),position)
+
+
         holder.recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         holder.recyclerView.adapter = horizontalAdapter
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴.
     override fun getItemCount(): Int {
-        return 4
+        Log.d("test","vertical size"+layoutVos.size)
+        if(layoutVos==null) return 0
+        return layoutVos.size
     }
-
+    fun setLayoutVos(layoutVos : ArrayList<Any?>){
+        this.layoutVos = layoutVos
+    }
 }
 
 

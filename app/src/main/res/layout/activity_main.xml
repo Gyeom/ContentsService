@@ -30,7 +30,6 @@
 
         <Button
             android:id="@+id/buttonSearch"
-            android:onClick="@{() -> viewModel.getAll()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

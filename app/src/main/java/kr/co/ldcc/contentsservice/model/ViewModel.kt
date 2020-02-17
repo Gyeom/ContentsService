@@ -12,60 +12,119 @@ import kr.co.ldcc.contentsservice.api.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 import kotlin.collections.ArrayList
 
 class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
 
-    var layoutVo : MutableLiveData<LayoutVo>
-    var videoVos : MutableLiveData<ArrayList<VideoVo>>
-    var imageVos : MutableLiveData<ArrayList<ImageVo>>
+    var videoVos: MutableLiveData<ArrayList<VideoVo>>
+    var imageVos: MutableLiveData<ArrayList<ImageVo>>
+//    var layoutVos: MutableLiveData<ArrayList<Any>>
+
 
     init {
-        layoutVo = MutableLiveData()
         videoVos = MutableLiveData()
         imageVos = MutableLiveData()
+//        layoutVos = MutableLiveData()
     }
 
-    fun getAll() : MutableLiveData<LayoutVo> {
-        var vCall: Call<VideoResponse> = RetrofitClient.getInstance()
+    fun getAllVideoVo(): MutableLiveData<ArrayList<VideoVo>> {
+        var Call: Call<VideoResponse> = RetrofitClient.getInstance()
             .service.getVideo("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
-
-        vCall!!.enqueue(object : Callback<VideoResponse> {
-
+        Log.d("test", "vCall")
+        Call!!.enqueue(object : Callback<VideoResponse> {
             override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
+                Log.d("test", "onResponse")
+
                 if (response.isSuccessful()) {
                     viewModelScope.launch(Dispatchers.IO) {
-                        Log.d("test",response.body()!!.documents.toString())
                         videoVos.postValue(response.body()!!.documents)
                     }
                 }
             }
 
             override fun onFailure(call: Call<VideoResponse?>, t: Throwable) {
+                Log.d("test", "fail")
+                Log.d("test", t.message)
+
             }
         })
+        return videoVos
+    }
 
-        var iCall: Call<ImageResponse> = RetrofitClient.getInstance()
+    fun getAllImageVo(): MutableLiveData<ArrayList<ImageVo>> {
+        var Call: Call<ImageResponse> = RetrofitClient.getInstance()
             .service.getImage("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
 
-        iCall!!.enqueue(object : Callback<ImageResponse> {
+        Call!!.enqueue(object : Callback<ImageResponse> {
 
             override fun onResponse(call: Call<ImageResponse>, response: Response<ImageResponse>) {
+                Log.d("test", "onResponse")
+
                 if (response.isSuccessful()) {
                     viewModelScope.launch(Dispatchers.IO) {
-                        Log.d("test",response.body()!!.documents.toString())
+                        Log.d("test", response.body()!!.documents.toString())
                         imageVos.postValue(response.body()!!.documents)
                     }
                 }
             }
 
             override fun onFailure(call: Call<ImageResponse?>, t: Throwable) {
+                Log.d("test", "fail")
+                Log.d("test", t.message)
+
             }
         })
-      Thread(Runnable { run(){
-          layoutVo.postValue(LayoutVo(videoVos, imageVos))
-      } })
-
-        return layoutVo
+        return imageVos
     }
+//
+//    fun getAll(): MutableLiveData<ArrayList<Any>> {
+//        var vCall: Call<VideoResponse> = RetrofitClient.getInstance()
+//            .service.getVideo("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
+//        Log.d("test","vCall")
+//        vCall!!.enqueue(object : Callback<VideoResponse> {
+//            override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
+//                Log.d("test","onResponse")
+//
+//                if (response.isSuccessful()) {
+//                    viewModelScope.launch(Dispatchers.IO) {
+//                        Log.d("test", response.body()!!.documents.toString())
+//                        videoVos.postValue(response.body()!!.documents)
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<VideoResponse?>, t: Throwable) {
+//                Log.d("test","fail")
+//                Log.d("test",t.message)
+//
+//            }
+//        })
+//
+//        var iCall: Call<ImageResponse> = RetrofitClient.getInstance()
+//            .service.getImage("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
+//
+//        iCall!!.enqueue(object : Callback<ImageResponse> {
+//
+//            override fun onResponse(call: Call<ImageResponse>, response: Response<ImageResponse>) {
+//                Log.d("test","onResponse")
+//
+//                if (response.isSuccessful()) {
+//                    viewModelScope.launch(Dispatchers.IO) {
+//                        Log.d("test", response.body()!!.documents.toString())
+//                        imageVos.postValue(response.body()!!.documents)
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ImageResponse?>, t: Throwable) {
+//                Log.d("test","fail")
+//                Log.d("test",t.message)
+//
+//            }
+//        })
+//        Thread.sleep(10000)
+//        layoutVos.postValue(arrayListOf(videoVos, imageVos))
+//        return layoutVos
+//    }
 }
