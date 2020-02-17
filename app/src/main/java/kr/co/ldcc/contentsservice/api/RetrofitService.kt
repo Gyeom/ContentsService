@@ -1,5 +1,6 @@
 package kr.co.ldcc.contentsservice.api
 
+import kr.co.ldcc.contentsservice.model.ImageResponse
 import kr.co.ldcc.contentsservice.model.VideoResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -12,4 +13,9 @@ interface RetrofitService {
         @Header("Authorization") authorization: String,
         @Query("query") query: String
     ): Call<VideoResponse>
+    @GET("/v2/search/image")
+    fun getImage(
+        @Header("Authorization") authorization: String,
+        @Query("query") query: String
+    ): Call<ImageResponse>
 }

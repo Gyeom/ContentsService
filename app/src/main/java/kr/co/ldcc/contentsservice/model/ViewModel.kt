@@ -16,45 +16,56 @@ import kotlin.collections.ArrayList
 
 class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
 
-    var subjects: ArrayList<String>
-
-    var videoVos: MutableLiveData<ArrayList<VideoVo>>
+    var layoutVo : MutableLiveData<LayoutVo>
+    var videoVos : MutableLiveData<ArrayList<VideoVo>>
+    var imageVos : MutableLiveData<ArrayList<ImageVo>>
 
     init {
+        layoutVo = MutableLiveData()
         videoVos = MutableLiveData()
-        subjects = arrayListOf("비디오","이미지","비디오/이미지")
+        imageVos = MutableLiveData()
     }
 
-
-    fun getAll() {
-        Log.d("test","getAll")
-        Log.d("test",videoVos.value.toString())
-        var call: Call<VideoResponse> = RetrofitClient.getInstance()
+    fun getAll() : MutableLiveData<LayoutVo> {
+        var vCall: Call<VideoResponse> = RetrofitClient.getInstance()
             .service.getVideo("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
-        if(call==null){
-            Log.d("test", "call이 null이다")
-        }else{
-            Log.d("test", "call이 null이아니다")
-        }
-//      var newData: MutableLiveData<VideoResponse> = MutableLiveData()
-        call!!.enqueue(object : Callback<VideoResponse> {
+
+        vCall!!.enqueue(object : Callback<VideoResponse> {
 
             override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
-                Log.d("test","onResponse")
-
                 if (response.isSuccessful()) {
                     viewModelScope.launch(Dispatchers.IO) {
-//                        newData.postValue(response.body())
                         Log.d("test",response.body()!!.documents.toString())
                         videoVos.postValue(response.body()!!.documents)
-
                     }
                 }
             }
 
             override fun onFailure(call: Call<VideoResponse?>, t: Throwable) {
-                Log.d("test",t.message)
             }
         })
+
+        var iCall: Call<ImageResponse> = RetrofitClient.getInstance()
+            .service.getImage("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
+
+        iCall!!.enqueue(object : Callback<ImageResponse> {
+
+            override fun onResponse(call: Call<ImageResponse>, response: Response<ImageResponse>) {
+                if (response.isSuccessful()) {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        Log.d("test",response.body()!!.documents.toString())
+                        imageVos.postValue(response.body()!!.documents)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ImageResponse?>, t: Throwable) {
+            }
+        })
+      Thread(Runnable { run(){
+          layoutVo.postValue(LayoutVo(videoVos, imageVos))
+      } })
+
+        return layoutVo
     }
 }
