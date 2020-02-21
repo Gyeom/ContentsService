@@ -8,42 +8,52 @@
             type="kr.co.ldcc.contentsservice.model.ViewModel" />
 
     </data>
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="asdds"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#E91E63" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="right"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-        <Button
-            android:id="@+id/buttonLinear"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="linear" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/buttonGrid"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="grid" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonLinear"
+                android:layout_width="65dp"
+                android:layout_height="20dp"
+                android:background="#FF0000"
+                android:text="linear"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+
+            <Button
+                android:id="@+id/buttonGrid"
+                android:layout_width="65dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="2dp"
+                android:background="#FF0000"
+                android:text="grid"
+                android:textColor="#FFFFFF"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="7dp" />
+
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-</LinearLayout>
 </layout>

@@ -1,32 +1,43 @@
 package kr.co.ldcc.contentsservice.adpater
 
 import android.content.Context
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.contents_recyclerview_item.view.*
 import kr.co.ldcc.contentsservice.R
+import kr.co.ldcc.contentsservice.model.ContentVo
 import kr.co.ldcc.contentsservice.model.ImageVo
+import kr.co.ldcc.contentsservice.model.Type
 import kr.co.ldcc.contentsservice.model.VideoVo
 
-class HorizontalAdapter(layoutVo: Any?, position: Int) : RecyclerView.Adapter<HorizontalAdapter.HorizontalViewHolder>() {
+class HorizontalAdapter(
+    layoutVo: Any?,
+    position: Int,
+    context: Context
+) : RecyclerView.Adapter<HorizontalAdapter.HorizontalViewHolder>() {
 
     var layoutVo : Any?
-    enum class Type{
-        Video, Image
-    }
     var type : Type
+    var context : Context
 
     init {
         this.layoutVo = layoutVo
+        this.context = context
         if(position==0){
-            this.type=Type.Video
+            this.type=Type.VIDEO
+        }else if(position==1){
+            this.type=Type.IMAGE
         }else{
-            this.type=Type.Image
+            this.type=Type.ANY
         }
     }
 
@@ -36,6 +47,14 @@ class HorizontalAdapter(layoutVo: Any?, position: Int) : RecyclerView.Adapter<Ho
         init {
             imageViewContent = itemView.imageViewContents
             textViewTitle = itemView.textViewTitle
+            itemView.setOnTouchListener { v, event ->
+                if (event.action == MotionEvent.ACTION_UP) itemView.parent.requestDisallowInterceptTouchEvent(
+                    false
+                ) else{
+                    itemView.parent.requestDisallowInterceptTouchEvent(true)
+                }
+                false
+            }
         }
     }
 
@@ -47,22 +66,46 @@ class HorizontalAdapter(layoutVo: Any?, position: Int) : RecyclerView.Adapter<Ho
     }
 
     override fun onBindViewHolder(holder: HorizontalViewHolder, position: Int) {
-        if(type==Type.Video) {
+        var displayMetrics : DisplayMetrics = context.applicationContext.resources.displayMetrics;
+        var width : Int = displayMetrics.widthPixels;
+        var height : Int = displayMetrics.heightPixels;
+
+        if(type==Type.VIDEO) {
             holder.itemView.textViewTitle.text = (layoutVo as ArrayList<VideoVo>).get(position).title
-//            holder.itemView.imageViewContents.
+            Glide.with(context).load((layoutVo as ArrayList<VideoVo>).get(position).thumbnail)
+                .apply(RequestOptions().override(width/3,height/8))
+                .into(holder.itemView.imageViewContents)
+
+//            holder.itemView.imageViewContents
+        }else if(type==Type.IMAGE){
+            holder.itemView.textViewTitle.text = ""
+            Glide.with(context).load((layoutVo as ArrayList<ImageVo>).get(position).thumbnail_url)
+                .apply(RequestOptions().override((width/2.8).toInt(),height/8))
+                .into(holder.itemView.imageViewContents)
         }else{
+            if((layoutVo as ArrayList<ContentVo>).get(position).type ==Type.VIDEO){
+                holder.itemView.textViewTitle.text = ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).title
+                Glide.with(context).load(((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).thumbnail)
+                    .apply(RequestOptions().override(width/3,height/8))
+                    .into(holder.itemView.imageViewContents)
+            }else{
+                holder.itemView.textViewTitle.text = ""
+                Glide.with(context).load(((layoutVo as ArrayList<ContentVo>).get(position).item as ImageVo).thumbnail_url)
+                    .apply(RequestOptions().override(width/3,height/8))
+                    .into(holder.itemView.imageViewContents)
+            }
         }
-
-
     }
 
     override fun getItemCount(): Int {
         if(layoutVo == null) return 0
-        if(type==Type.Video) {
-            Log.d("Test",("video size")+((layoutVo as ArrayList<VideoVo>).size))
+        if(type==Type.VIDEO) {
+            Log.d("Test",("VIDEO size")+((layoutVo as ArrayList<VideoVo>).size))
             return (layoutVo as ArrayList<VideoVo>).size
-        }else{
+        }else if(type==Type.IMAGE){
             return (layoutVo as ArrayList<ImageVo>).size
+        }else{
+            return (layoutVo as ArrayList<ContentVo>).size
         }
     }
 }

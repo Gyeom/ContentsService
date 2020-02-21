@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.adpater.VerticalAdapter
+import kr.co.ldcc.contentsservice.model.ContentVo
 import kr.co.ldcc.contentsservice.model.ImageVo
 import kr.co.ldcc.contentsservice.model.VideoVo
 import kr.co.ldcc.contentsservice.model.ViewModel
@@ -44,12 +45,18 @@ class MainFragment : Fragment() {
         var layoutVos: ArrayList<Any?> = ArrayList()
             layoutVos.add(null)
             layoutVos.add(null)
+            layoutVos.add(null)
 
         viewModel.getAllVideoVo().observe(this, Observer<ArrayList<VideoVo>>{
             layoutVos.set(0,it)
-            Log.d("test",it.toString()+"비디오테스트비디오테스트")
-            adapter = VerticalAdapter(context!!,layoutVos)
-            recyclerViewVertical.adapter = adapter
+            if(adapter==null) {
+                adapter = VerticalAdapter(context!!, layoutVos)
+                recyclerViewVertical.adapter = adapter
+            }else{
+                adapter!!.setLayoutVos(layoutVos)
+                adapter!!.notifyDataSetChanged()
+            }
+
         })
 
 

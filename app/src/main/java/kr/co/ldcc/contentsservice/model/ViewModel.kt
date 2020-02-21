@@ -2,7 +2,6 @@ package kr.co.ldcc.contentsservice.model
 
 import android.app.Application
 import android.util.Log
-import android.widget.TextView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -12,20 +11,15 @@ import kr.co.ldcc.contentsservice.api.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
-
     var videoVos: MutableLiveData<ArrayList<VideoVo>>
     var imageVos: MutableLiveData<ArrayList<ImageVo>>
-//    var layoutVos: MutableLiveData<ArrayList<Any>>
-
 
     init {
         videoVos = MutableLiveData()
         imageVos = MutableLiveData()
-//        layoutVos = MutableLiveData()
     }
 
     fun getAllVideoVo(): MutableLiveData<ArrayList<VideoVo>> {
@@ -72,7 +66,6 @@ class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
             override fun onFailure(call: Call<ImageResponse?>, t: Throwable) {
                 Log.d("test", "fail")
                 Log.d("test", t.message)
-
             }
         })
         return imageVos
