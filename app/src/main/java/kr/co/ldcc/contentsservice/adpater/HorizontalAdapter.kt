@@ -2,7 +2,6 @@ package kr.co.ldcc.contentsservice.adpater
 
 import android.content.Context
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -32,13 +31,7 @@ class HorizontalAdapter(
     init {
         this.layoutVo = layoutVo
         this.context = context
-        if(position==0){
-            this.type=Type.VIDEO
-        }else if(position==1){
-            this.type=Type.IMAGE
-        }else{
-            this.type=Type.ANY
-        }
+        this.type = Type.values().get(position)
     }
 
     inner class HorizontalViewHolder internal  constructor(itemView : View) : RecyclerView.ViewHolder(itemView){
@@ -76,7 +69,6 @@ class HorizontalAdapter(
                 .apply(RequestOptions().override(width/3,height/8))
                 .into(holder.itemView.imageViewContents)
 
-//            holder.itemView.imageViewContents
         }else if(type==Type.IMAGE){
             holder.itemView.textViewTitle.text = ""
             Glide.with(context).load((layoutVo as ArrayList<ImageVo>).get(position).thumbnail_url)
@@ -91,21 +83,20 @@ class HorizontalAdapter(
             }else{
                 holder.itemView.textViewTitle.text = ""
                 Glide.with(context).load(((layoutVo as ArrayList<ContentVo>).get(position).item as ImageVo).thumbnail_url)
-                    .apply(RequestOptions().override(width/3,height/8))
+                    .apply(RequestOptions().override((width/2.8).toInt(),height/8))
                     .into(holder.itemView.imageViewContents)
             }
         }
     }
 
     override fun getItemCount(): Int {
-        if(layoutVo == null) return 0
-        if(type==Type.VIDEO) {
-            Log.d("Test",("VIDEO size")+((layoutVo as ArrayList<VideoVo>).size))
-            return (layoutVo as ArrayList<VideoVo>).size
-        }else if(type==Type.IMAGE){
-            return (layoutVo as ArrayList<ImageVo>).size
-        }else{
-            return (layoutVo as ArrayList<ContentVo>).size
+        layoutVo?: run{
+            return 0
+        }
+        when(type){
+            Type.VIDEO -> return (layoutVo as ArrayList<VideoVo>).size
+            Type.IMAGE -> return (layoutVo as ArrayList<ImageVo>).size
+            else -> return (layoutVo as ArrayList<ContentVo>).size
         }
     }
 }

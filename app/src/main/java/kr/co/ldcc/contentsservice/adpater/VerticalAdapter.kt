@@ -7,6 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.get
+import androidx.core.view.marginLeft
+import androidx.core.view.size
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,58 +24,68 @@ import kr.co.ldcc.contentsservice.model.VideoVo
 class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
     RecyclerView.Adapter<VerticalAdapter.ViewHolder>() {
 
+    companion object {
+        private const val LAYOUT_SIZE = 3
+
+    }
+
     private val subjects: Array<String> = arrayOf("동영상", "이미지", "동영상/이미지")
-    private var context: Context
+    private val context: Context
     private var layoutVos: ArrayList<Any?>
+    private var videoVos: ArrayList<VideoVo>? = null
+    private var imageVos: ArrayList<ImageVo>? = null
+    private var contentVos: ArrayList<ContentVo>
 
     init {
         this.context = context
         this.layoutVos = layoutVos
-        var anyVos: ArrayList<ContentVo> = ArrayList()
-        if (layoutVos.get(0)!=null&&layoutVos.get(1)!=null) {
-            Log.d("test",anyVos.size.toString())
+        contentVos = ArrayList()
 
-            (layoutVos.get(0) as ArrayList<VideoVo>).forEach {
-                anyVos.add(ContentVo(it,Type.VIDEO))
-            }
-
-            (layoutVos.get(1) as ArrayList<ImageVo>).forEach {
-                anyVos.add(ContentVo(it,Type.IMAGE))
-            }
-//            anyVos.addAll(layoutVos.get(0) as ArrayList<VideoVo>)
-//            Log.d("test",anyVos.size.toString())
-//
-//            anyVos.addAll(layoutVos.get(1) as ArrayList<ImageVo>)
-//            Log.d("test",anyVos.size.toString())
-
-            Log.d("test","비디오 :"+layoutVos.get(0)!!.toString())
-            Log.d("test",anyVos.size.toString())
-            Log.d("test","1"+anyVos.toString())
-            anyVos.sortWith(Comparator { o1, o2 ->
-                if ((o1.item is VideoVo) && (o2.item is ImageVo)) {
-                    ((o1.item as VideoVo).datetime).compareTo((o2.item as ImageVo).datetime)
-                } else if ((o1.item is VideoVo) && (o2.item is VideoVo)) {
-                    ((o1.item as VideoVo).datetime).compareTo((o2.item as VideoVo).datetime)
-                } else if ((o1.item is ImageVo) && (o2.item is VideoVo)) {
-                    ((o1.item as ImageVo).datetime).compareTo((o2.item as VideoVo).datetime)
-                } else if ((o1.item is ImageVo) && (o2.item is ImageVo)) {
-                    ((o1.item as ImageVo).datetime).compareTo((o2.item as ImageVo).datetime)
-                } else {
-                    throw Exception()
-                }
-            })
-
-//            anyVos.forEach {
-//                when(it.type){
-//                    Type.VIDEO -> Log.d("test",(it.item as VideoVo).datetime)
-//                    Type.IMAGE -> Log.d("test",(it.item as ImageVo).datetime)
-//                }
-//            }
-            layoutVos.set(2,anyVos)
-
-            Log.d("test","2"+anyVos.toString())
-        }
+        combineVideoAndImage()
     }
+
+    private fun combineVideoAndImage() {
+        contentVos.clear()
+
+        layoutVos.get(Type.VIDEO.ordinal)?.let {
+            videoVos = it as ArrayList<VideoVo>
+        }
+        layoutVos.get(Type.IMAGE.ordinal)?.let {
+            imageVos = it as ArrayList<ImageVo>
+        }
+
+        videoVos?.let {
+            it.forEach { videoVo ->
+                contentVos.add(ContentVo(videoVo, Type.VIDEO))
+            }
+        } ?: run {
+            return
+        }
+
+        imageVos?.let {
+            it.forEach { imageVo ->
+                contentVos.add(ContentVo(imageVo, Type.IMAGE))
+            }
+        } ?: run {
+            return
+        }
+
+        contentVos.sortWith(Comparator { o1, o2 ->
+            if ((o1.item is VideoVo) && (o2.item is ImageVo)) {
+                ((o1.item as VideoVo).datetime).compareTo((o2.item as ImageVo).datetime)
+            } else if ((o1.item is VideoVo) && (o2.item is VideoVo)) {
+                ((o1.item as VideoVo).datetime).compareTo((o2.item as VideoVo).datetime)
+            } else if ((o1.item is ImageVo) && (o2.item is VideoVo)) {
+                ((o1.item as ImageVo).datetime).compareTo((o2.item as VideoVo).datetime)
+            } else if ((o1.item is ImageVo) && (o2.item is ImageVo)) {
+                ((o1.item as ImageVo).datetime).compareTo((o2.item as ImageVo).datetime)
+            } else {
+                throw Exception()
+            }
+        })
+        layoutVos.set(Type.CONTENT.ordinal, contentVos)
+    }
+
 
     // 2. 아이템 뷰를 저장하는 뷰홀더 클래스.
     // itemView에 리스너 생성
@@ -82,10 +95,9 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
         var recyclerView: RecyclerView
         var buttonGrid: Button
         var buttonLinear: Button
-        var displayMetrics : DisplayMetrics = context.applicationContext.resources.displayMetrics;
-        var height : Int = displayMetrics.heightPixels;
-
-
+        var displayMetrics: DisplayMetrics = context.applicationContext.resources.displayMetrics;
+        var height: Int = displayMetrics.heightPixels;
+        var width: Int = displayMetrics.widthPixels;
         init {
             // 뷰 객체에 대한 참조. (hold strong reference)
             textViewTitle = itemView.textViewTitle
@@ -94,14 +106,12 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
             buttonLinear = itemView.buttonLinear
             buttonGrid.setOnClickListener {
                 recyclerView.layoutManager = GridLayoutManager(context, 3)
-                recyclerView.layoutParams.height=height/3
-
+                recyclerView.layoutParams.height = (height / 1.8).toInt()
             }
             buttonLinear.setOnClickListener {
                 recyclerView.layoutManager =
                     LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                recyclerView.layoutParams.height=height/7
-
+                recyclerView.layoutParams.height = height / 7
             }
         }
     }
@@ -115,36 +125,31 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
 
     // 3. onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder.title.text= "test"
-        holder.textViewTitle.text = subjects[position]
-        Log.d("test", subjects[position])
 
-
-
-        holder.recyclerView.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-
-        var horizontalAdapter :HorizontalAdapter? = null
-        if(horizontalAdapter == null){
-            horizontalAdapter = HorizontalAdapter(layoutVos.get(position), position, context)
-        }else{
-            horizontalAdapter.layoutVo = layoutVos.get(position)
-            horizontalAdapter.notifyDataSetChanged()
+        holder.run {
+            this.textViewTitle.text = subjects[position]
+            this.recyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
 
+        var horizontalAdapter: HorizontalAdapter? = null
+        horizontalAdapter?.let {
+            it.layoutVo = layoutVos.get(position)
+            it.notifyDataSetChanged()
+        } ?: run {
+            horizontalAdapter = HorizontalAdapter(layoutVos.get(position), position, context)
+        }
 
         holder.recyclerView.adapter = horizontalAdapter
     }
 
     // getItemCount() - 전체 데이터 갯수 리턴.
     override fun getItemCount(): Int {
-        return 3;
+        return LAYOUT_SIZE
     }
 
     fun setLayoutVos(layoutVos: ArrayList<Any?>) {
         this.layoutVos = layoutVos
+        combineVideoAndImage()
     }
 }
-
-

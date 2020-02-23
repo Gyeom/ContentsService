@@ -16,12 +16,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val pagerAdatper = ViewPagerAdapter(supportFragmentManager, tabLayout.tabCount)
-        viewPager.adapter = pagerAdatper
-        tabLayout.setupWithViewPager(viewPager)
-
+        val pagerAdatper = ViewPagerAdapter(supportFragmentManager, tabLayout.tabCount).apply {
+            viewPager.adapter = this
+            tabLayout.setupWithViewPager(viewPager)
+        }
         getAppKeyHash()
-
     }
 
     private fun getAppKeyHash() {
@@ -39,5 +38,4 @@ class MainActivity : AppCompatActivity() {
             Log.e("name not found", e.toString())
         }
     }
-
 }

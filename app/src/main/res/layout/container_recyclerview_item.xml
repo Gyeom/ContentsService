@@ -9,7 +9,7 @@
 
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -19,24 +19,26 @@
             android:id="@+id/textViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="18sp"
             android:textColor="#FFFFFF"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            bind:layout_constraintTop_toTopOf="parent"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right"
-            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/buttonLinear"
                 android:layout_width="65dp"
                 android:layout_height="20dp"
+                android:layout_marginRight="2dp"
                 android:background="#FF0000"
                 android:text="linear"
                 android:textColor="#FFFFFF"
-                android:textSize="12dp" />
+                android:textSize="12dp"
+                bind:layout_constraintTop_toTopOf="@id/buttonGrid"
+                bind:layout_constraintRight_toLeftOf="@id/buttonGrid"
+                />
 
             <Button
                 android:id="@+id/buttonGrid"
@@ -46,14 +48,20 @@
                 android:background="#FF0000"
                 android:text="grid"
                 android:textColor="#FFFFFF"
-                android:textSize="12dp" />
-        </LinearLayout>
+                android:textSize="12sp"
+                bind:layout_constraintTop_toBottomOf="@id/textViewTitle"
+                bind:layout_constraintRight_toRightOf="parent"
+                />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewHorizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="7dp" />
+            android:layout_marginTop="7dp"
+            bind:layout_constraintTop_toBottomOf="@id/buttonGrid"
+            bind:layout_constraintRight_toRightOf="parent"
+            bind:layout_constraintLeft_toLeftOf="parent"
+            />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="2dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center">
     <ImageView
         android:id="@+id/imageViewContents"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_launcher_background"
-        tools:ignore="VectorDrawableCompat" />
+        tools:ignore="VectorDrawableCompat"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:paddingLeft="10dp"
+        />
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="2"
             android:maxLines="2"
             android:text="TextView"
             android:textColor="#FFFFFF"
-            android:textSize="10sp" />
-    </LinearLayout>
-</LinearLayout>
+            android:textSize="10sp"
+            app:layout_constraintTop_toBottomOf="@id/imageViewContents"
+            app:layout_constraintLeft_toLeftOf="@id/imageViewContents"
+            app:layout_constraintRight_toRightOf="@id/imageViewContents"
+            android:paddingLeft="20dp"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>

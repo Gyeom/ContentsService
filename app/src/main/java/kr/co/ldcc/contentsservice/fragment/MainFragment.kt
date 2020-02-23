@@ -22,9 +22,9 @@ import kr.co.ldcc.contentsservice.model.ViewModel
 class MainFragment : Fragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var viewModel: ViewModel
-    companion object{
-        fun newInstance() : MainFragment
-        {
+
+    companion object {
+        fun newInstance(): MainFragment {
 //            val args = Bundle()
             val mainFragment = MainFragment()
 //            mainFragment.arguments = args
@@ -32,43 +32,47 @@ class MainFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        var fragment : View = inflater.inflate(R.layout.fragment_main, container, false)
+        var fragment: View = inflater.inflate(R.layout.fragment_main, container, false)
 
-        linearLayoutManager = LinearLayoutManager(activity)
-        fragment.recyclerViewVertical.layoutManager = linearLayoutManager
+        linearLayoutManager = LinearLayoutManager(activity).apply {
+            fragment.recyclerViewVertical.layoutManager = this
+        }
 
         viewModel = ViewModelProviders.of(this).get(ViewModel::class.java)
-        var adapter : VerticalAdapter? = null
+        var adapter: VerticalAdapter? = null
+        var layoutVos: ArrayList<Any?> = ArrayList(arrayListOf(null, null, null))
 
-        var layoutVos: ArrayList<Any?> = ArrayList()
-            layoutVos.add(null)
-            layoutVos.add(null)
-            layoutVos.add(null)
-
-        viewModel.getAllVideoVo().observe(this, Observer<ArrayList<VideoVo>>{
-            layoutVos.set(0,it)
-            if(adapter==null) {
-                adapter = VerticalAdapter(context!!, layoutVos)
-                recyclerViewVertical.adapter = adapter
-            }else{
-                adapter!!.setLayoutVos(layoutVos)
-                adapter!!.notifyDataSetChanged()
+        viewModel.getAllVideoVo().observe(this, Observer<ArrayList<VideoVo>> {
+            it?.let {
+                layoutVos.set(0, it)
+                adapter?.let { adapter ->
+                    adapter.setLayoutVos(layoutVos)
+                    adapter.notifyDataSetChanged()
+                } ?: run {
+                    adapter = VerticalAdapter(context!!, layoutVos)
+                    recyclerViewVertical.adapter = adapter
+                }
             }
-
         })
 
-
-        viewModel.getAllImageVo().observe(this, Observer<ArrayList<ImageVo>>{
-            layoutVos.set(1,it)
-            Log.d("test",it.toString()+"이미지테스트이미지테스트")
-            adapter = VerticalAdapter(context!!,layoutVos)
-            recyclerViewVertical.adapter = adapter
+        viewModel.getAllImageVo().observe(this, Observer<ArrayList<ImageVo>> {
+            it?.let {
+                layoutVos.set(1, it)
+                adapter?.let { adapter ->
+                    adapter.setLayoutVos(layoutVos)
+                    adapter.notifyDataSetChanged()
+                } ?: run {
+                    adapter = VerticalAdapter(context!!, layoutVos)
+                    recyclerViewVertical.adapter = adapter
+                }
+            }
         })
-
-
-//        container!!.buttonSearch.setOnClickListener(View.OnClickListener {
 
         return fragment
     }
