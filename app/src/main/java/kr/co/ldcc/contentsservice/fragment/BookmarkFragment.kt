@@ -11,8 +11,8 @@ import kr.co.ldcc.contentsservice.R
 class BookmarkFragment : Fragment() {
     // TODO: Rename and change types of parameters
 
-    companion object{
-        fun newInstance() : BookmarkFragment{
+    companion object {
+        fun newInstance(): BookmarkFragment {
 //            val args = Bundle()
             val bookmarkFragment = BookmarkFragment()
 //            bookmarkFragment.arguments = args
@@ -20,9 +20,12 @@ class BookmarkFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_bookmark, container, false)
     }
-
 }

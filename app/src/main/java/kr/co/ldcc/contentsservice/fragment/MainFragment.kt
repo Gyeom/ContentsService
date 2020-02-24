@@ -1,7 +1,6 @@
 package kr.co.ldcc.contentsservice.fragment
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +12,13 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.adpater.VerticalAdapter
-import kr.co.ldcc.contentsservice.model.ContentVo
 import kr.co.ldcc.contentsservice.model.ImageVo
 import kr.co.ldcc.contentsservice.model.VideoVo
 import kr.co.ldcc.contentsservice.model.ViewModel
 
 
 class MainFragment : Fragment() {
+
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var viewModel: ViewModel
 

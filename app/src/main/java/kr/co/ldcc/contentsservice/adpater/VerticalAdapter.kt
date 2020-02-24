@@ -98,6 +98,7 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
         var displayMetrics: DisplayMetrics = context.applicationContext.resources.displayMetrics;
         var height: Int = displayMetrics.heightPixels;
         var width: Int = displayMetrics.widthPixels;
+
         init {
             // 뷰 객체에 대한 참조. (hold strong reference)
             textViewTitle = itemView.textViewTitle

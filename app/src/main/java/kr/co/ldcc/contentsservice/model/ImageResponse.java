@@ -3,6 +3,7 @@ package kr.co.ldcc.contentsservice.model;
 import java.util.ArrayList;
 
 public class ImageResponse {
+
     private ImageMeta meta;
     private ArrayList<ImageVo> documents;
 

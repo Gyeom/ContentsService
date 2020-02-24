@@ -10,6 +10,7 @@ public class VideoVo implements Parcelable {
     private String url;
     private String datetime;
     private String author;
+
     public VideoVo(String title, int play_time, String thumbnail, String url, String datetime, String author) {
         this.title = title;
         this.play_time = play_time;

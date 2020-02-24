@@ -12,7 +12,7 @@ class RetrofitClient private constructor() {
 
     var service = retrofit.create(RetrofitService::class.java)
 
-    companion object{
+    companion object {
         private val ourInstance: RetrofitClient = RetrofitClient()
         fun getInstance(): RetrofitClient {
             return ourInstance

@@ -25,10 +25,9 @@ class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
     fun getAllVideoVo(): MutableLiveData<ArrayList<VideoVo>> {
         var Call: Call<VideoResponse> = RetrofitClient.getInstance()
             .service.getVideo("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
-        Log.d("test", "vCall")
+
         Call!!.enqueue(object : Callback<VideoResponse> {
             override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
-                Log.d("test", "onResponse")
 
                 if (response.isSuccessful()) {
                     viewModelScope.launch(Dispatchers.IO) {
@@ -38,9 +37,7 @@ class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
             }
 
             override fun onFailure(call: Call<VideoResponse?>, t: Throwable) {
-                Log.d("test", "fail")
-                Log.d("test", t.message)
-
+                Log.d("retrofit onFailure", t.message)
             }
         })
         return videoVos
@@ -53,19 +50,16 @@ class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
         Call!!.enqueue(object : Callback<ImageResponse> {
 
             override fun onResponse(call: Call<ImageResponse>, response: Response<ImageResponse>) {
-                Log.d("test", "onResponse")
 
                 if (response.isSuccessful()) {
                     viewModelScope.launch(Dispatchers.IO) {
-                        Log.d("test", response.body()!!.documents.toString())
                         imageVos.postValue(response.body()!!.documents)
                     }
                 }
             }
 
             override fun onFailure(call: Call<ImageResponse?>, t: Throwable) {
-                Log.d("test", "fail")
-                Log.d("test", t.message)
+                Log.d("retrofit onFailure", t.message)
             }
         })
         return imageVos

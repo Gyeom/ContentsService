@@ -1,6 +1,7 @@
 package kr.co.ldcc.contentsservice.model;
 
 public class ImageMeta {
+
     private int total_count;
     private int pageable_count;
     private boolean is_end;

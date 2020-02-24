@@ -5,8 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="2dp"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageViewContents"
@@ -32,6 +31,6 @@
             app:layout_constraintTop_toBottomOf="@id/imageViewContents"
             app:layout_constraintLeft_toLeftOf="@id/imageViewContents"
             app:layout_constraintRight_toRightOf="@id/imageViewContents"
-            android:paddingLeft="20dp"
+            android:paddingLeft="10dp"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

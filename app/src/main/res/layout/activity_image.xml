@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".activity.ImageActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_launcher_background"
+        tools:ignore="VectorDrawableCompat" />
+
+    <Button
+        android:id="@+id/buttonBookmark"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:background="@drawable/button_bookmark"
+        android:layout_marginRight="3dp"
+        app:layout_constraintRight_toLeftOf="@id/textViewBookmark"
+        app:layout_constraintTop_toTopOf="@id/textViewWrite" />
+
+    <TextView
+        android:id="@+id/textViewBookmark"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="북마크"
+        android:textColor="#FFC107"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginRight="3dp"
+        app:layout_constraintRight_toLeftOf="@id/buttonReplyWrite"
+        app:layout_constraintTop_toTopOf="@id/textViewWrite" />
+
+    <Button
+        android:id="@+id/buttonReplyWrite"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:background="@drawable/button_write"
+        android:layout_marginRight="3dp"
+        app:layout_constraintRight_toLeftOf="@id/textViewWrite"
+        app:layout_constraintTop_toTopOf="@id/textViewWrite" />
+
+    <TextView
+        android:id="@+id/textViewWrite"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="댓글쓰기"
+        android:textColor="#FFC107"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginRight="3dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        android:layout_marginTop="10dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

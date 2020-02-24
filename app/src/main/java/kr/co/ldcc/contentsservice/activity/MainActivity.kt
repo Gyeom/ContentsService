@@ -1,5 +1,6 @@
 package kr.co.ldcc.contentsservice.activity
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Base64
@@ -12,9 +13,19 @@ import java.security.MessageDigest
 
 class MainActivity : AppCompatActivity() {
 
+    companion object{
+        lateinit var userId : String
+        lateinit var profile : String
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val intent : Intent = getIntent()
+        userId = intent.getStringExtra("userId")
+        profile = intent.getStringExtra("profile")
 
         val pagerAdatper = ViewPagerAdapter(supportFragmentManager, tabLayout.tabCount).apply {
             viewPager.adapter = this
