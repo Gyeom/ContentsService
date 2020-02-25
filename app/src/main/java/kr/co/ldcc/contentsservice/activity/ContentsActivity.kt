@@ -17,8 +17,11 @@ import kr.co.ldcc.contentsservice.adpater.ReplyAdapter
 import kr.co.ldcc.contentsservice.fragment.ReplyDialogFragment
 import kr.co.ldcc.contentsservice.model.viewmodel.ReplyViewModel
 import kr.co.ldcc.contentsservice.model.vo.ReplyVo
+import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ImageActivity : AppCompatActivity() {
+class ContentsActivity : AppCompatActivity() {
     lateinit var replyViewModel: ReplyViewModel
     lateinit var sharedPreferences: SharedPreferences
 
@@ -30,12 +33,23 @@ class ImageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_image)
         val intent: Intent = getIntent()
         var thumbnail: String = intent.getStringExtra("thumbnail")
+        var contentType: String = intent.getStringExtra("contentType")
         var displayMetrics: DisplayMetrics = applicationContext.resources.displayMetrics;
         var width: Int = displayMetrics.widthPixels;
         var height: Int = displayMetrics.heightPixels;
-        var contentId = thumbnail.substring(thumbnail.lastIndexOf("/") + 1)
+        var url = ""
+        intent.getStringExtra("url")?.let{
+            url = it
+        }
 
-        // SharedPreferences 불러오
+        var contentId : String = when(contentType){
+            "Image" -> thumbnail.substring(thumbnail.lastIndexOf("/") + 1)
+            "Video" -> url.substring(url.lastIndexOf("v=") + 2)
+            else -> throw NoSuchFieldError()
+        }
+
+
+        // SharedPreferences 불러오기
         initSharedPreferences()
 
         val buttonReplyWrite = findViewById(R.id.buttonReplyWrite) as Button
