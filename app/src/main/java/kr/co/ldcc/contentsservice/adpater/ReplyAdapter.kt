@@ -53,7 +53,6 @@ class ReplyAdapter(context: Context, replyVos : ArrayList<ReplyVo>) : RecyclerVi
         var replyVo : ReplyVo = replyVos.get(position)
         holder.textViewUserId.text = replyVo.userId
         holder.textViewReplyComment.text = replyVo.comment
-        Log.d("test",replyVo.profile.toString())
         Glide.with(holder.imageViewProfile.getContext()).load(replyVo.profile)
             .override(width/8,height/10)
             .into(holder.imageViewProfile) //Glide을 이용해서 이미지뷰에 url에 있는 이미지를 세팅해줌

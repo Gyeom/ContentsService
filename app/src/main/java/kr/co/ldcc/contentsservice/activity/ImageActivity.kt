@@ -4,8 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
-import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -16,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.activity_image.*
 import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.adpater.ReplyAdapter
+import kr.co.ldcc.contentsservice.fragment.ReplyDialogFragment
 import kr.co.ldcc.contentsservice.model.viewmodel.ReplyViewModel
 import kr.co.ldcc.contentsservice.model.vo.ReplyVo
 
@@ -51,17 +50,16 @@ class ImageActivity : AppCompatActivity() {
         var replyAdapter: ReplyAdapter? = null
 
         buttonReplyWrite.setOnClickListener {
-            Log.d("test", "click")
-            replyViewModel.insert(ReplyVo(userId, profile, "test", contentId))
+            val replyDialogFragment = ReplyDialogFragment(this, contentId, replyViewModel)
+            val manager = supportFragmentManager
+            replyDialogFragment.show(manager, "replyDialog")
+//            replyViewModel.insert(ReplyVo(userId, profile, "test", contentId))
         }
 
         replyViewModel.getAll(contentId)?.let {
             it.observe(this, Observer<List<ReplyVo>> { replyVos ->
-                Log.d("test", replyVos.toString())
-                Log.d("test", contentId)
-//                Log.d("test", replyVos.get(0).userId + "111")
-//
-//                Log.d("test", replyVos.get(0).profile + "112")
+
+                textViewReplyCount.text=replyVos.size.toString()
                 replyAdapter?.let { replyAdapter ->
                     replyAdapter.replyVos = ArrayList(replyVos)
                     replyAdapter.notifyDataSetChanged()

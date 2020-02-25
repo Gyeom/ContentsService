@@ -146,7 +146,6 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
         } ?: run {
             horizontalAdapter = HorizontalAdapter(layoutVos.get(position), position, context)
         }
-
         holder.recyclerView.adapter = horizontalAdapter
     }
 
