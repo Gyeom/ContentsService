@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="kr.co.ldcc.contentsservice.model.ViewModel" />
+            type="kr.co.ldcc.contentsservice.model.viewmodel.SearchViewModel" />
 
     </data>
 

@@ -1,4 +1,4 @@
-package kr.co.ldcc.contentsservice.model;
+package kr.co.ldcc.contentsservice.model.vo;
 
 import java.util.ArrayList;
 

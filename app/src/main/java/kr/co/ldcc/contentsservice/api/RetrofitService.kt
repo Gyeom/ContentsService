@@ -1,7 +1,7 @@
 package kr.co.ldcc.contentsservice.api
 
-import kr.co.ldcc.contentsservice.model.ImageResponse
-import kr.co.ldcc.contentsservice.model.VideoResponse
+import kr.co.ldcc.contentsservice.model.vo.ImageResponse
+import kr.co.ldcc.contentsservice.model.vo.VideoResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

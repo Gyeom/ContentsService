@@ -3,7 +3,6 @@ package kr.co.ldcc.contentsservice.adpater
 import android.content.Context
 import android.content.Intent
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -17,10 +16,10 @@ import kotlinx.android.synthetic.main.contents_recyclerview_item.view.*
 import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.activity.ImageActivity
 import kr.co.ldcc.contentsservice.activity.VideoActivity
-import kr.co.ldcc.contentsservice.model.ContentVo
-import kr.co.ldcc.contentsservice.model.ImageVo
+import kr.co.ldcc.contentsservice.model.vo.ContentVo
+import kr.co.ldcc.contentsservice.model.vo.ImageVo
 import kr.co.ldcc.contentsservice.model.Type
-import kr.co.ldcc.contentsservice.model.VideoVo
+import kr.co.ldcc.contentsservice.model.vo.VideoVo
 
 class HorizontalAdapter(
     layoutVo: Any?,
@@ -64,25 +63,25 @@ class HorizontalAdapter(
                         thumbnail = (layoutVo as ArrayList<ImageVo>).get(position).thumbnail_url
                         val intent = Intent(context, ImageActivity::class.java)
                         intent.putExtra("thumbnail", thumbnail)
-                        it.context.startActivity(intent)
+                        context.startActivity(intent)
                     } else if (type.equals(Type.VIDEO)) {
                         thumbnail = (layoutVo as ArrayList<VideoVo>).get(position).thumbnail
                         val intent = Intent(context, VideoActivity::class.java)
                         intent.putExtra("thumbnail", thumbnail)
-                        it.context.startActivity(intent)
+                        context.startActivity(intent)
                     } else {
                         if ((layoutVo as ArrayList<ContentVo>).get(position).type.equals(Type.VIDEO)) {
                             thumbnail =
                                 ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).thumbnail
                             val intent = Intent(context, VideoActivity::class.java)
                             intent.putExtra("thumbnail", thumbnail)
-                            it.context.startActivity(intent)
+                            context.startActivity(intent)
                         } else {
                             thumbnail =
                                 ((layoutVo as ArrayList<ContentVo>).get(position).item as ImageVo).thumbnail_url
                             val intent = Intent(context, ImageActivity::class.java)
                             intent.putExtra("thumbnail", thumbnail)
-                            it.context.startActivity(intent)
+                            context.startActivity(intent)
                         }
                     }
                 }

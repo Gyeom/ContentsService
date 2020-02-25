@@ -1,7 +1,4 @@
-package kr.co.ldcc.contentsservice.model;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+package kr.co.ldcc.contentsservice.model.vo;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package kr.co.ldcc.contentsservice.model
+package kr.co.ldcc.contentsservice.model.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -8,12 +8,16 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kr.co.ldcc.contentsservice.api.RetrofitClient
+import kr.co.ldcc.contentsservice.model.vo.ImageResponse
+import kr.co.ldcc.contentsservice.model.vo.ImageVo
+import kr.co.ldcc.contentsservice.model.vo.VideoResponse
+import kr.co.ldcc.contentsservice.model.vo.VideoVo
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlin.collections.ArrayList
 
-class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
+class SearchViewModel(applcation: Application) : AndroidViewModel(applcation) {
     var videoVos: MutableLiveData<ArrayList<VideoVo>>
     var imageVos: MutableLiveData<ArrayList<ImageVo>>
 
@@ -22,9 +26,9 @@ class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
         imageVos = MutableLiveData()
     }
 
-    fun getAllVideoVo(): MutableLiveData<ArrayList<VideoVo>> {
+    fun getAllVideoVo(searchText : String): MutableLiveData<ArrayList<VideoVo>> {
         var Call: Call<VideoResponse> = RetrofitClient.getInstance()
-            .service.getVideo("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
+            .service.getVideo("KakaoAK f73ede515a6f7edcb9697b7af164db1d", searchText)
 
         Call!!.enqueue(object : Callback<VideoResponse> {
             override fun onResponse(call: Call<VideoResponse>, response: Response<VideoResponse>) {
@@ -43,9 +47,9 @@ class ViewModel(applcation: Application) : AndroidViewModel(applcation) {
         return videoVos
     }
 
-    fun getAllImageVo(): MutableLiveData<ArrayList<ImageVo>> {
+    fun getAllImageVo(searchText : String): MutableLiveData<ArrayList<ImageVo>> {
         var Call: Call<ImageResponse> = RetrofitClient.getInstance()
-            .service.getImage("KakaoAK f73ede515a6f7edcb9697b7af164db1d", "zico")
+            .service.getImage("KakaoAK f73ede515a6f7edcb9697b7af164db1d", searchText)
 
         Call!!.enqueue(object : Callback<ImageResponse> {
 

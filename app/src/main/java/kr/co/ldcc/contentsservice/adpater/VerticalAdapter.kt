@@ -2,23 +2,19 @@ package kr.co.ldcc.contentsservice.adpater
 
 import android.content.Context
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.get
-import androidx.core.view.marginLeft
-import androidx.core.view.size
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.container_recyclerview_item.view.*
 import kr.co.ldcc.contentsservice.R
-import kr.co.ldcc.contentsservice.model.ContentVo
-import kr.co.ldcc.contentsservice.model.ImageVo
+import kr.co.ldcc.contentsservice.model.vo.ContentVo
+import kr.co.ldcc.contentsservice.model.vo.ImageVo
 import kr.co.ldcc.contentsservice.model.Type
-import kr.co.ldcc.contentsservice.model.VideoVo
+import kr.co.ldcc.contentsservice.model.vo.VideoVo
 
 
 class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
@@ -56,7 +52,12 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
 
         videoVos?.let {
             it.forEach { videoVo ->
-                contentVos.add(ContentVo(videoVo, Type.VIDEO))
+                contentVos.add(
+                    ContentVo(
+                        videoVo,
+                        Type.VIDEO
+                    )
+                )
             }
         } ?: run {
             return
@@ -64,7 +65,12 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
 
         imageVos?.let {
             it.forEach { imageVo ->
-                contentVos.add(ContentVo(imageVo, Type.IMAGE))
+                contentVos.add(
+                    ContentVo(
+                        imageVo,
+                        Type.IMAGE
+                    )
+                )
             }
         } ?: run {
             return

@@ -1,12 +1,11 @@
-package kr.co.ldcc.contentsservice.model;
+package kr.co.ldcc.contentsservice.model.vo;
 
-public class ImageMeta {
-
+public class VideoMeta {
     private int total_count;
     private int pageable_count;
     private boolean is_end;
 
-    public ImageMeta(int total_count, int pageable_count, boolean is_end) {
+    public VideoMeta(int total_count, int pageable_count, boolean is_end) {
         this.total_count = total_count;
         this.pageable_count = pageable_count;
         this.is_end = is_end;

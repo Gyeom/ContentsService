@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("userId", result.getNickname());
                     intent.putExtra("profile", result.getProfileImagePath());
+
                     startActivity(intent);
                     finish();
                 }
