@@ -1,5 +1,6 @@
 package kr.co.ldcc.contentsservice.model.dao
 
+import androidx.annotation.NonNull
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert

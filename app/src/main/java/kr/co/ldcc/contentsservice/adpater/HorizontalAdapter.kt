@@ -17,6 +17,7 @@ import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.activity.ContentsActivity
 import kr.co.ldcc.contentsservice.model.vo.ContentVo
 import kr.co.ldcc.contentsservice.model.Type
+import kr.co.ldcc.contentsservice.model.vo.BookmarkVo
 import kr.co.ldcc.contentsservice.model.vo.VideoVo
 import kr.co.ldcc.contentsservice.model.vo.ImageVo
 
@@ -57,30 +58,48 @@ class HorizontalAdapter(
             itemView.setOnClickListener {
                 var position: Int = adapterPosition
                 var thumbnail: String
+                var title : String
+                var datetime : String
                 val intent = Intent(context, ContentsActivity::class.java)
 
                 if (position != RecyclerView.NO_POSITION) {
                     if (type.equals(Type.IMAGE)) {
                         thumbnail = (layoutVo as ArrayList<ImageVo>).get(position).thumbnail_url
+                        datetime = (layoutVo as ArrayList<ImageVo>).get(position).datetime
+                        title = ""
                         intent.putExtra("contentType", "Image")
                     } else if (type.equals(Type.VIDEO)) {
                         thumbnail = (layoutVo as ArrayList<VideoVo>).get(position).thumbnail
+                        title = (layoutVo as ArrayList<VideoVo>).get(position).title
+                        datetime = (layoutVo as ArrayList<VideoVo>).get(position).datetime
                         intent.putExtra("contentType", "Video")
                         intent.putExtra("url", (layoutVo as ArrayList<VideoVo>).get(position).url)
-                    } else {
+                    } else if(type.equals(Type.CONTENT)) {
                         if ((layoutVo as ArrayList<ContentVo>).get(position).type.equals(Type.VIDEO)) {
                             thumbnail =
                                 ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).thumbnail
+                            title = ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).title
+                            datetime = ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).datetime
                             intent.putExtra("contentType", "Video")
                             intent.putExtra("url", (layoutVo as ArrayList<VideoVo>).get(position).url)
 
                         } else {
+                            title = ""
                             thumbnail =
                                 ((layoutVo as ArrayList<ContentVo>).get(position).item as ImageVo).thumbnail_url
+                            datetime = ((layoutVo as ArrayList<ContentVo>).get(position).item as ImageVo).datetime
                             intent.putExtra("contentType", "Image")
                         }
+                    } else {
+                        datetime = (layoutVo as ArrayList<BookmarkVo>).get(position).datetime
+                        thumbnail = (layoutVo as ArrayList<BookmarkVo>).get(position).thumbnail
+                        title = (layoutVo as ArrayList<BookmarkVo>).get(position).title
+                        intent.putExtra("contentType", "Bookmark")
+                        intent.putExtra("contentId", (layoutVo as ArrayList<BookmarkVo>).get(position).contentId)
                     }
+                    intent.putExtra("datetime",datetime)
                     intent.putExtra("thumbnail", thumbnail)
+                    intent.putExtra("title", title)
                     context.startActivity(intent)
                 }
             }
@@ -115,7 +134,7 @@ class HorizontalAdapter(
                 .load((layoutVo as ArrayList<ImageVo>).get(position).thumbnail_url)
                 .apply(RequestOptions().override((width / 2.8).toInt(), height / 8))
                 .into(holder.itemView.imageViewContents)
-        } else {
+        } else if (type == Type.CONTENT) {
             if ((layoutVo as ArrayList<ContentVo>).get(position).type == Type.VIDEO) {
                 holder.itemView.textViewTitle.text =
                     ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).title
@@ -130,6 +149,12 @@ class HorizontalAdapter(
                     .apply(RequestOptions().override((width / 2.8).toInt(), height / 8))
                     .into(holder.itemView.imageViewContents)
             }
+        } else if (type == Type.BOOKMARK){
+            holder.itemView.textViewTitle.text =
+                (layoutVo as ArrayList<BookmarkVo>).get(position).title
+            Glide.with(context).load((layoutVo as ArrayList<BookmarkVo>).get(position).thumbnail)
+                .apply(RequestOptions().override(width / 3, height / 8))
+                .into(holder.itemView.imageViewContents)
         }
     }
 
@@ -140,7 +165,8 @@ class HorizontalAdapter(
         when (type) {
             Type.VIDEO -> return (layoutVo as ArrayList<VideoVo>).size
             Type.IMAGE -> return (layoutVo as ArrayList<ImageVo>).size
-            else -> return (layoutVo as ArrayList<ContentVo>).size
+            Type.CONTENT -> return (layoutVo as ArrayList<ContentVo>).size
+            else -> return (layoutVo as ArrayList<BookmarkVo>).size
         }
     }
 }

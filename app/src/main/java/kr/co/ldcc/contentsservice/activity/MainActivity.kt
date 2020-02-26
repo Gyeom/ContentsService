@@ -6,17 +6,20 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.activity_image.*
+import com.kakao.usermgmt.UserManagement
+import com.kakao.usermgmt.callback.LogoutResponseCallback
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.adpater.VerticalAdapter
 import kr.co.ldcc.contentsservice.adpater.ViewPagerAdapter
 import kr.co.ldcc.contentsservice.model.Type
-import kr.co.ldcc.contentsservice.model.viewmodel.ReplyViewModel
 import kr.co.ldcc.contentsservice.model.viewmodel.SearchViewModel
 import kr.co.ldcc.contentsservice.model.vo.ImageVo
 import kr.co.ldcc.contentsservice.model.vo.VideoVo
@@ -95,6 +98,30 @@ class MainActivity : AppCompatActivity() {
 
         getAppKeyHash()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        when (id) {
+            R.id.buttonLogout -> {
+                Toast.makeText(applicationContext, "정상적으로 로그아웃되었습니다.", Toast.LENGTH_SHORT)
+                    .show()
+                UserManagement.getInstance().requestLogout(object : LogoutResponseCallback() {
+                    override fun onCompleteLogout() {
+                        val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(intent)
+                    }
+                })
+            }
+        }
+        return super.onOptionsItemSelected(item)    }
 
     private fun getAppKeyHash() {
         try {
