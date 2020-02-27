@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -14,13 +15,14 @@ import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.activity_contents.*
 import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.adpater.ReplyAdapter
+import kr.co.ldcc.contentsservice.etc.DisplayMetric
 import kr.co.ldcc.contentsservice.fragment.ReplyDialogFragment
 import kr.co.ldcc.contentsservice.model.viewmodel.BookmarkViewModel
 import kr.co.ldcc.contentsservice.model.viewmodel.ReplyViewModel
 import kr.co.ldcc.contentsservice.model.vo.BookmarkVo
 import kr.co.ldcc.contentsservice.model.vo.ReplyVo
 
-class ContentsActivity : AppCompatActivity() {
+class ContentsActivity : AppCompatActivity(), View.OnClickListener {
 
     lateinit var replyViewModel: ReplyViewModel
     lateinit var bookmarkViewModel: BookmarkViewModel
@@ -33,7 +35,7 @@ class ContentsActivity : AppCompatActivity() {
     lateinit var contentId: String
     lateinit var userId: String
     lateinit var profile: String
-    lateinit var displayMetrics : DisplayMetrics
+    lateinit var displayMetric: DisplayMetric
 
 
     var replyAdapter: ReplyAdapter? = null
@@ -45,18 +47,19 @@ class ContentsActivity : AppCompatActivity() {
         var intent = getIntent()
         initIntent(intent)
 
-        displayMetrics = applicationContext.resources.displayMetrics
-        val height = displayMetrics.heightPixels
-        val width = displayMetrics.widthPixels
+        // init displayMetric
+        displayMetric = DisplayMetric(applicationContext)
+
+
+        // init Listener
+        initButtonListener()
+
 
         // SharedPreferences
         initSharedPreferences()
 
         // init ViewModel
         initViewModel()
-
-        // init ButtonListener
-        initButtonListener()
 
         // Observer
         initObserver()
@@ -65,13 +68,21 @@ class ContentsActivity : AppCompatActivity() {
         initContentsInfo()
     }
 
+    private fun initButtonListener() {
+        buttonBookmark.setOnClickListener(this)
+        textViewBookmark.setOnClickListener(this)
+        buttonReplyWrite.setOnClickListener(this)
+        textViewReplyWrite.setOnClickListener(this)
+
+    }
+
     private fun initContentsInfo() {
         Glide.with(applicationContext)
             .load(thumbnail)
             .apply(
                 RequestOptions().override(
-                    displayMetrics.widthPixels,
-                    displayMetrics.heightPixels / 3
+                    displayMetric.width,
+                    displayMetric.height / 3
                 )
             )
             .into(imageView)
@@ -103,8 +114,8 @@ class ContentsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initButtonListener() {
-        buttonBookmark.setOnClickListener {
+    override fun onClick(v: View) {
+        if (v.id == R.id.buttonBookmark || v.id == R.id.textViewBookmark) {
             if (buttonBookmark.isSelected == true) {
                 bookmarkViewModel.delete(userId, contentId)
                 buttonBookmark.isSelected = false
@@ -123,7 +134,7 @@ class ContentsActivity : AppCompatActivity() {
             }
         }
 
-        buttonReplyWrite.setOnClickListener {
+        else if (v.id == R.id.buttonReplyWrite || v.id == R.id.textViewReplyWrite) {
             val replyDialogFragment = ReplyDialogFragment(this, contentId, replyViewModel)
             val manager = supportFragmentManager
             replyDialogFragment.show(manager, "replyDialog")

@@ -26,7 +26,7 @@ class SearchViewModel(applcation: Application) : AndroidViewModel(applcation) {
         imageVos = MutableLiveData()
     }
 
-    fun getAllVideoVo(searchText : String): MutableLiveData<ArrayList<VideoVo>> {
+    fun getAllVideoVo(searchText: String): MutableLiveData<ArrayList<VideoVo>> {
         var Call: Call<VideoResponse> = RetrofitClient.getInstance()
             .service.getVideo("KakaoAK f73ede515a6f7edcb9697b7af164db1d", searchText)
 
@@ -47,7 +47,7 @@ class SearchViewModel(applcation: Application) : AndroidViewModel(applcation) {
         return videoVos
     }
 
-    fun getAllImageVo(searchText : String): MutableLiveData<ArrayList<ImageVo>> {
+    fun getAllImageVo(searchText: String): MutableLiveData<ArrayList<ImageVo>> {
         var Call: Call<ImageResponse> = RetrofitClient.getInstance()
             .service.getImage("KakaoAK f73ede515a6f7edcb9697b7af164db1d", searchText)
 

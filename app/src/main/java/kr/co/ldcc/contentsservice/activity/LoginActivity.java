@@ -2,6 +2,7 @@ package kr.co.ldcc.contentsservice.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
         sessionCallback = new SessionCallback();
         Session.getCurrentSession().addCallback(sessionCallback);
         Session.getCurrentSession().checkAndImplicitOpen();
-
     }
 
 

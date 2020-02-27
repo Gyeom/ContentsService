@@ -7,7 +7,7 @@ import androidx.room.Query
 import kr.co.ldcc.contentsservice.model.vo.BookmarkVo
 
 @Dao
-interface BookmarkDao{
+interface BookmarkDao {
     @Query("SELECT * FROM bookmark WHERE userId= :userId")
     fun getAll(userId: String): LiveData<List<BookmarkVo>>
 

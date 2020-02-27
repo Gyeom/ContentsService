@@ -23,7 +23,7 @@ class BookmarkFragment : Fragment() {
 
     lateinit var bookmarkViewModel: BookmarkViewModel
     lateinit var sharedPreferences: SharedPreferences
-    lateinit var bookmarkFragmentView : View
+    lateinit var bookmarkFragmentView: View
     lateinit var userId: String
     lateinit var profile: String
 
@@ -88,13 +88,13 @@ class BookmarkFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         bookmarkViewModel.getAll(userId)?.let {
-            it.observe(this,Observer<List<BookmarkVo>>{ bookmarkVos ->
+            it.observe(this, Observer<List<BookmarkVo>> { bookmarkVos ->
                 textViewBookmarkCount.text = bookmarkVos.size.toString()
-                adapter?.let{
+                adapter?.let {
                     it.layoutVo = bookmarkVos
                     it.notifyDataSetChanged()
-                }?:run{
-                    adapter = HorizontalAdapter(bookmarkVos,3,context!!)
+                } ?: run {
+                    adapter = HorizontalAdapter(bookmarkVos, 3, context!!)
                     bookmarkFragmentView.recyclerViewBookmark.adapter = adapter
                 }
             })
@@ -102,7 +102,7 @@ class BookmarkFragment : Fragment() {
     }
 
     private fun initSharedPreferences() {
-        activity?.let{
+        activity?.let {
             sharedPreferences = it.getSharedPreferences("sFile", AppCompatActivity.MODE_PRIVATE)
             sharedPreferences.getString("userId", "")?.let {
                 userId = it

@@ -12,25 +12,28 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.reply_recyclerview_item.view.*
 import kr.co.ldcc.contentsservice.R
+import kr.co.ldcc.contentsservice.etc.DisplayMetric
 import kr.co.ldcc.contentsservice.model.vo.ReplyVo
 
-class ReplyAdapter(context: Context, replyVos : ArrayList<ReplyVo>) : RecyclerView.Adapter<ReplyAdapter.ViewHolder>(){
+class ReplyAdapter(context: Context, replyVos: ArrayList<ReplyVo>) :
+    RecyclerView.Adapter<ReplyAdapter.ViewHolder>() {
 
 
     val context: Context
     var replyVos: ArrayList<ReplyVo>
 
-    init{
+    init {
         this.context = context
         this.replyVos = replyVos
     }
 
-    inner class ViewHolder internal constructor(itemView : View) : RecyclerView.ViewHolder(itemView){
-        var textViewReplyComment : TextView
-        var textViewUserId : TextView
-        var imageViewProfile : ImageView
+    inner class ViewHolder internal constructor(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+        var textViewReplyComment: TextView
+        var textViewUserId: TextView
+        var imageViewProfile: ImageView
 
-        init{
+        init {
             textViewUserId = itemView.textViewUserId
             textViewReplyComment = itemView.textViewReplyComment
             imageViewProfile = itemView.imageViewProfile
@@ -45,16 +48,16 @@ class ReplyAdapter(context: Context, replyVos : ArrayList<ReplyVo>) : RecyclerVi
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var displayMetrics: DisplayMetrics =
-            context.applicationContext.resources.displayMetrics
-        var width: Int = displayMetrics.widthPixels
-        var height: Int = displayMetrics.heightPixels
+        // init displayMetric
+        val displayMetric = DisplayMetric(context)
+        val height: Int = displayMetric.height
+        val width: Int = displayMetric.width
 
-        var replyVo : ReplyVo = replyVos.get(position)
+        var replyVo: ReplyVo = replyVos.get(position)
         holder.textViewUserId.text = replyVo.userId
         holder.textViewReplyComment.text = replyVo.comment
         Glide.with(holder.imageViewProfile.getContext()).load(replyVo.profile)
-            .override(width/8,height/10)
+            .override(width / 8, height / 10)
             .into(holder.imageViewProfile) //Glide을 이용해서 이미지뷰에 url에 있는 이미지를 세팅해줌
     }
 

@@ -8,7 +8,7 @@ import kr.co.ldcc.contentsservice.model.vo.BookmarkVo
 import kr.co.ldcc.contentsservice.model.vo.ReplyVo
 
 @Database(entities = [ReplyVo::class, BookmarkVo::class], version = 1)
-abstract class AppDatabase : RoomDatabase(){
+abstract class AppDatabase : RoomDatabase() {
     abstract fun replyDao(): ReplyDao
-    abstract fun bookmarkDao() : BookmarkDao
+    abstract fun bookmarkDao(): BookmarkDao
 }

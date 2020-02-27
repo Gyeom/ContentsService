@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.container_recyclerview_item.view.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kr.co.ldcc.contentsservice.R
+import kr.co.ldcc.contentsservice.etc.DisplayMetric
 import kr.co.ldcc.contentsservice.model.vo.ContentVo
 import kr.co.ldcc.contentsservice.model.vo.ImageVo
 import kr.co.ldcc.contentsservice.model.Type
@@ -35,16 +36,11 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
     private var videoVos: ArrayList<VideoVo>? = null
     private var imageVos: ArrayList<ImageVo>? = null
     private var contentVos: ArrayList<ContentVo>
-    var displayMetrics: DisplayMetrics
-    var height: Int = 0
-    var width :Int = 0
 
     init {
         this.context = context
         this.layoutVos = layoutVos
         this.contentVos = ArrayList()
-        displayMetrics = context.resources.displayMetrics
-        height = displayMetrics.heightPixels
         combineVideoAndImage()
     }
 
@@ -109,10 +105,11 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
         var recyclerView: RecyclerView
         var buttonGrid: Button
         var buttonLinear: Button
-        var displayMetrics: DisplayMetrics = context.applicationContext.resources.displayMetrics;
-        var height: Int = displayMetrics.heightPixels;
-        var width: Int = displayMetrics.widthPixels;
 
+        // init displayMetric
+        val displayMetric: DisplayMetric = DisplayMetric(context)
+        val height: Int = displayMetric.height
+        val width: Int = displayMetric.width
 
         init {
             // 뷰 객체에 대한 참조. (hold strong reference)
@@ -121,7 +118,8 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
             buttonGrid = itemView.buttonGrid
             buttonLinear = itemView.buttonLinear
 
-            recyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+            recyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.layoutParams.height = height / 7
 
             buttonGrid.setOnClickListener {
@@ -146,12 +144,15 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
 
     // 3. onBindViewHolder() - position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시.
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        // init displayMetric
+        val displayMetric = DisplayMetric(context)
+        val height: Int = displayMetric.height
 
         holder.textViewTitle.text = subjects[position]
-        holder.recyclerView.adapter ?. let{
+        holder.recyclerView.adapter?.let {
             (it as HorizontalAdapter).layoutVo = layoutVos.get(position)
             holder.recyclerView.layoutParams.height = height / 7
-            it.type = when(position){
+            it.type = when (position) {
                 0 -> Type.VIDEO
                 1 -> Type.IMAGE
                 2 -> Type.CONTENT
@@ -159,7 +160,7 @@ class VerticalAdapter(context: Context, layoutVos: ArrayList<Any?>) :
                 else -> throw NoSuchFieldException()
             }
             it.notifyDataSetChanged()
-        }?:run {
+        } ?: run {
             holder.recyclerView.adapter =
                 HorizontalAdapter(layoutVos.get(position), position, context)
         }

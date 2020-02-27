@@ -32,9 +32,9 @@
             android:layout_marginRight="3dp"
             android:background="@drawable/button_bookmark"
             android:textIsSelectable="false"
-            app:layout_constraintBottom_toBottomOf="@id/textViewWrite"
+            app:layout_constraintBottom_toBottomOf="@id/textViewReplyWrite"
             app:layout_constraintRight_toLeftOf="@id/textViewBookmark"
-            app:layout_constraintTop_toTopOf="@id/textViewWrite" />
+            app:layout_constraintTop_toTopOf="@id/textViewReplyWrite" />
 
         <TextView
             android:id="@+id/textViewBookmark"
@@ -47,7 +47,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintRight_toLeftOf="@id/buttonReplyWrite"
-            app:layout_constraintTop_toTopOf="@id/textViewWrite" />
+            app:layout_constraintTop_toTopOf="@id/textViewReplyWrite" />
 
         <Button
             android:id="@+id/buttonReplyWrite"
@@ -55,12 +55,12 @@
             android:layout_height="0dp"
             android:layout_marginRight="3dp"
             android:background="@drawable/button_write"
-            app:layout_constraintBottom_toBottomOf="@id/textViewWrite"
-            app:layout_constraintRight_toLeftOf="@id/textViewWrite"
-            app:layout_constraintTop_toTopOf="@id/textViewWrite" />
+            app:layout_constraintBottom_toBottomOf="@id/textViewReplyWrite"
+            app:layout_constraintRight_toLeftOf="@id/textViewReplyWrite"
+            app:layout_constraintTop_toTopOf="@id/textViewReplyWrite" />
 
         <TextView
-            android:id="@+id/textViewWrite"
+            android:id="@+id/textViewReplyWrite"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
@@ -83,7 +83,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWrite" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewReplyWrite" />
 
         <TextView
             android:id="@+id/textViewReplyCount"

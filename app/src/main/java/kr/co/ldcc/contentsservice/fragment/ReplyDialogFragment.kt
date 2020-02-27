@@ -29,7 +29,7 @@ class ReplyDialogFragment(activity: Activity, contentId: String, replyViewModel:
 
     lateinit var sharedPreferences: SharedPreferences
     lateinit var userId: String
-    lateinit var  profile: String
+    lateinit var profile: String
 
     init {
         this.activity = activity
@@ -51,7 +51,7 @@ class ReplyDialogFragment(activity: Activity, contentId: String, replyViewModel:
         return builder.create()
     }
 
-    private fun getAlertDialogBuilder(view: View) : AlertDialog.Builder {
+    private fun getAlertDialogBuilder(view: View): AlertDialog.Builder {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle("댓글작성")
             .setView(view)

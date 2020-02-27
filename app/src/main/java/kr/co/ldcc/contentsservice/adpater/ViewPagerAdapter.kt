@@ -1,6 +1,5 @@
 package kr.co.ldcc.contentsservice.adpater
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -10,7 +9,7 @@ import kr.co.ldcc.contentsservice.fragment.MainFragment
 class ViewPagerAdapter(fragmentManager: FragmentManager, tabCount: Int) :
     FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    private val tabCount : Int
+    private val tabCount: Int
 
     init {
         this.tabCount = tabCount

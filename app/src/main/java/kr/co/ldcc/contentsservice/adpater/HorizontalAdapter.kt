@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.contents_recyclerview_item.view.*
 import kotlinx.android.synthetic.main.contents_recyclerview_item.view.textViewTitle
 import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.activity.ContentsActivity
+import kr.co.ldcc.contentsservice.etc.DisplayMetric
 import kr.co.ldcc.contentsservice.model.vo.ContentVo
 import kr.co.ldcc.contentsservice.model.Type
 import kr.co.ldcc.contentsservice.model.vo.BookmarkVo
@@ -61,8 +62,8 @@ class HorizontalAdapter(
             itemView.setOnClickListener {
                 var position: Int = adapterPosition
                 var thumbnail: String
-                var title : String
-                var datetime : String
+                var title: String
+                var datetime: String
                 val intent = Intent(context, ContentsActivity::class.java)
 
                 if (position != RecyclerView.NO_POSITION) {
@@ -77,20 +78,26 @@ class HorizontalAdapter(
                         datetime = (layoutVo as ArrayList<VideoVo>).get(position).datetime
                         intent.putExtra("contentType", "Video")
                         intent.putExtra("url", (layoutVo as ArrayList<VideoVo>).get(position).url)
-                    } else if(type.equals(Type.CONTENT)) {
+                    } else if (type.equals(Type.CONTENT)) {
                         if ((layoutVo as ArrayList<ContentVo>).get(position).type.equals(Type.VIDEO)) {
                             thumbnail =
                                 ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).thumbnail
-                            title = ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).title
-                            datetime = ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).datetime
+                            title =
+                                ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).title
+                            datetime =
+                                ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).datetime
                             intent.putExtra("contentType", "Video")
-                            intent.putExtra("url", (layoutVo as ArrayList<VideoVo>).get(position).url)
+                            intent.putExtra(
+                                "url",
+                                (layoutVo as ArrayList<VideoVo>).get(position).url
+                            )
 
                         } else {
                             title = ""
                             thumbnail =
                                 ((layoutVo as ArrayList<ContentVo>).get(position).item as ImageVo).thumbnail_url
-                            datetime = ((layoutVo as ArrayList<ContentVo>).get(position).item as ImageVo).datetime
+                            datetime =
+                                ((layoutVo as ArrayList<ContentVo>).get(position).item as ImageVo).datetime
                             intent.putExtra("contentType", "Image")
                         }
                     } else {
@@ -98,10 +105,13 @@ class HorizontalAdapter(
                         thumbnail = (layoutVo as ArrayList<BookmarkVo>).get(position).thumbnail
                         title = (layoutVo as ArrayList<BookmarkVo>).get(position).title
                         intent.putExtra("contentType", "Bookmark")
-                        intent.putExtra("contentId", (layoutVo as ArrayList<BookmarkVo>).get(position).contentId)
+                        intent.putExtra(
+                            "contentId",
+                            (layoutVo as ArrayList<BookmarkVo>).get(position).contentId
+                        )
                     }
 
-                    intent.putExtra("datetime",datetime)
+                    intent.putExtra("datetime", datetime)
                     intent.putExtra("thumbnail", thumbnail)
                     intent.putExtra("title", title)
                     context.startActivity(intent)
@@ -120,10 +130,10 @@ class HorizontalAdapter(
     }
 
     override fun onBindViewHolder(holder: HorizontalViewHolder, position: Int) {
-        var displayMetrics: DisplayMetrics =
-            context.applicationContext.resources.displayMetrics;
-        var width: Int = displayMetrics.widthPixels;
-        var height: Int = displayMetrics.heightPixels;
+        // init displayMetric
+        val displayMetric = DisplayMetric(context)
+        val height: Int = displayMetric.height
+        val width: Int = displayMetric.width
 
         if (type == Type.VIDEO) {
             holder.itemView.textViewTitle.text =
@@ -140,7 +150,7 @@ class HorizontalAdapter(
                 .into(holder.itemView.imageViewContents)
 
         } else if (type == Type.CONTENT) {
-            Log.d("Test",position.toString())
+            Log.d("Test", position.toString())
             if ((layoutVo as ArrayList<ContentVo>).get(position).type == Type.VIDEO) {
                 holder.itemView.textViewTitle.text =
                     ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).title
@@ -157,7 +167,7 @@ class HorizontalAdapter(
                     .into(holder.itemView.imageViewContents)
             }
 
-        } else if (type == Type.BOOKMARK){
+        } else if (type == Type.BOOKMARK) {
             holder.itemView.textViewTitle.text =
                 (layoutVo as ArrayList<BookmarkVo>).get(position).title
             Glide.with(context).load((layoutVo as ArrayList<BookmarkVo>).get(position).thumbnail)
@@ -165,7 +175,6 @@ class HorizontalAdapter(
                 .into(holder.itemView.imageViewContents)
         }
     }
-
 
 
     override fun getItemCount(): Int {
