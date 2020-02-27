@@ -5,18 +5,24 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Base64
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.LogoutResponseCallback
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kr.co.ldcc.contentsservice.R
+import kr.co.ldcc.contentsservice.adpater.HorizontalAdapter
 import kr.co.ldcc.contentsservice.adpater.VerticalAdapter
 import kr.co.ldcc.contentsservice.adpater.ViewPagerAdapter
 import kr.co.ldcc.contentsservice.model.Type
@@ -24,11 +30,19 @@ import kr.co.ldcc.contentsservice.model.viewmodel.SearchViewModel
 import kr.co.ldcc.contentsservice.model.vo.ImageVo
 import kr.co.ldcc.contentsservice.model.vo.VideoVo
 import java.security.MessageDigest
+import java.util.zip.Inflater
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var searchViewModel: SearchViewModel
+
+    var adapter: VerticalAdapter? = null
+    var layoutVos: ArrayList<Any?>
+
+    init {
+        layoutVos = ArrayList(arrayListOf(null, null, null))
+    }
 
     companion object {
         lateinit var userId: String
@@ -40,29 +54,34 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val intent: Intent = getIntent()
-        userId = intent.getStringExtra("userId")
-        profile = intent.getStringExtra("profile")
+        initIntent(intent)
 
+        // SharedPreferences를 sFile이름, 기본모드로 설정
+        setSharedPreferences()
 
-        //SharedPreferences를 sFile이름, 기본모드로 설정
-        var sharedPreferences : SharedPreferences = getSharedPreferences("sFile", MODE_PRIVATE)
-        var editor: SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putString("userId", userId)
-        editor.putString("profile", profile)
-        Log.d("test", userId+","+ profile)
-        editor.commit()
-        editor.apply()
+        // TabLayout & ViewPager
+        initPager()
 
+        // init ViewModel
+        initViewModel()
 
-        val pagerAdatper = ViewPagerAdapter(supportFragmentManager, tabLayout.tabCount).apply {
-            viewPager.adapter = this
-            tabLayout.setupWithViewPager(viewPager)
+        // init Observer
+        initObserver()
+
+        // init ButtonListener
+        initButtonListener()
+
+        getAppKeyHash()
+    }
+
+    private fun initButtonListener() {
+        buttonSearch.setOnClickListener {
+            searchViewModel.getAllImageVo(editTextSearch.text.toString())
+            searchViewModel.getAllVideoVo(editTextSearch.text.toString())
         }
+    }
 
-        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
-        var adapter: VerticalAdapter? = null
-        var layoutVos: ArrayList<Any?> = ArrayList(arrayListOf(null, null, null))
-
+    private fun initObserver() {
         searchViewModel.getAllVideoVo(editTextSearch.text.toString())
             .observe(this, Observer<ArrayList<VideoVo>> {
                 it?.let {
@@ -90,13 +109,31 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
 
-        buttonSearch.setOnClickListener {
-            searchViewModel.getAllImageVo(editTextSearch.text.toString())
-            searchViewModel.getAllVideoVo(editTextSearch.text.toString())
+    private fun initViewModel() {
+        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
+    }
+
+    private fun initPager() {
+        ViewPagerAdapter(supportFragmentManager, tabLayout.tabCount).apply {
+            viewPager.adapter = this
+            tabLayout.setupWithViewPager(viewPager)
         }
+    }
 
-        getAppKeyHash()
+    private fun setSharedPreferences() {
+        var sharedPreferences: SharedPreferences = getSharedPreferences("sFile", MODE_PRIVATE)
+        var editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putString("userId", userId)
+        editor.putString("profile", profile)
+        editor.commit()
+        editor.apply()
+    }
+
+    private fun initIntent(intent: Intent) {
+        userId = intent.getStringExtra("userId")
+        profile = intent.getStringExtra("profile")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

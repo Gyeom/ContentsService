@@ -20,13 +20,14 @@ import kr.co.ldcc.contentsservice.model.viewmodel.BookmarkViewModel
 import kr.co.ldcc.contentsservice.model.vo.BookmarkVo
 
 class BookmarkFragment : Fragment() {
-    lateinit var bookmarkViewModel: BookmarkViewModel
 
+    lateinit var bookmarkViewModel: BookmarkViewModel
     lateinit var sharedPreferences: SharedPreferences
-    var userId: String = "사용자 아이디"
-    var profile: String = "사용자 프로필"
+    lateinit var bookmarkFragmentView : View
+    lateinit var userId: String
+    lateinit var profile: String
+
     var adapter: HorizontalAdapter? = null
-   lateinit var v : View
 
     companion object {
         fun newInstance(): BookmarkFragment {
@@ -43,29 +44,45 @@ class BookmarkFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
 
-        bookmarkViewModel = ViewModelProviders.of(this).get(BookmarkViewModel::class.java)
+        // initViewModel
+        initViewModel()
 
-        v = inflater.inflate(R.layout.fragment_bookmark,container,false)
-        val gridLayoutManager = GridLayoutManager(context,3)
-        v.recyclerViewBookmark.layoutManager = gridLayoutManager
+        // inflate fragment_bookmark.xml
+        initView(inflater, container)
 
+        // initSharedPreferences
         initSharedPreferences()
 
+        // initObserver
+        initObserver()
+
+        return bookmarkFragmentView
+    }
+
+    private fun initViewModel() {
+        bookmarkViewModel = ViewModelProviders.of(this).get(BookmarkViewModel::class.java)
+    }
+
+    private fun initObserver() {
         bookmarkViewModel.getAll(userId)?.let {
-           it.observe(this,Observer<List<BookmarkVo>>{ bookmarkVos ->
-               adapter?.let{
+            it.observe(this, Observer<List<BookmarkVo>> { bookmarkVos ->
+                adapter?.let {
                     it.layoutVo = bookmarkVos
                     it.notifyDataSetChanged()
                     textViewBookmarkCount.text = bookmarkVos.size.toString()
-               }?:run{
-                   adapter = HorizontalAdapter(bookmarkVos,3,context!!)
-                   v.recyclerViewBookmark.adapter = adapter
-               }
-           })
-       }
-        return v
+                } ?: run {
+                    adapter = HorizontalAdapter(bookmarkVos, 3, context!!)
+                    bookmarkFragmentView.recyclerViewBookmark.adapter = adapter
+                }
+            })
+        }
+    }
+
+    private fun initView(inflater: LayoutInflater, container: ViewGroup?) {
+        bookmarkFragmentView = inflater.inflate(R.layout.fragment_bookmark, container, false)
+        val gridLayoutManager = GridLayoutManager(context, 3)
+        bookmarkFragmentView.recyclerViewBookmark.layoutManager = gridLayoutManager
     }
 
     override fun onResume() {
@@ -78,7 +95,7 @@ class BookmarkFragment : Fragment() {
                     it.notifyDataSetChanged()
                 }?:run{
                     adapter = HorizontalAdapter(bookmarkVos,3,context!!)
-                    v.recyclerViewBookmark.adapter = adapter
+                    bookmarkFragmentView.recyclerViewBookmark.adapter = adapter
                 }
             })
         }

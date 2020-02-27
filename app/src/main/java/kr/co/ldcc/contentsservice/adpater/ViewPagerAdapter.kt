@@ -9,7 +9,8 @@ import kr.co.ldcc.contentsservice.fragment.MainFragment
 
 class ViewPagerAdapter(fragmentManager: FragmentManager, tabCount: Int) :
     FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-    private var tabCount: Int? = null
+
+    private val tabCount : Int
 
     init {
         this.tabCount = tabCount
@@ -25,7 +26,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, tabCount: Int) :
     }
 
     override fun getCount(): Int {
-        return this.tabCount ?: 0
+        return this.tabCount
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

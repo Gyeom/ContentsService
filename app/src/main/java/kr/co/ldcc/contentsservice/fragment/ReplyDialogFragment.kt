@@ -22,13 +22,14 @@ import kr.co.ldcc.contentsservice.model.vo.ReplyVo
 
 class ReplyDialogFragment(activity: Activity, contentId: String, replyViewModel: ReplyViewModel) :
     DialogFragment() {
-    var replyViewModel: ReplyViewModel
-    lateinit var sharedPreferences: SharedPreferences
-    var contentId: String
 
-    var userId: String = "사용자 아이디"
-    var profile: String = "사용자 프로필"
     val activity: Activity
+    val replyViewModel: ReplyViewModel
+    val contentId: String
+
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var userId: String
+    lateinit var  profile: String
 
     init {
         this.activity = activity
@@ -38,11 +39,19 @@ class ReplyDialogFragment(activity: Activity, contentId: String, replyViewModel:
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        // SharedPreferences 불러오기
+        // init SharedPreferences
         initSharedPreferences()
 
-        // 다이얼로그를 통해 보여줄 뷰를 생성한다.
-        val view: View = activity.layoutInflater.inflate(R.layout.reply_dialog, null)
+        // inflate R.layout.reply_dialog
+        val view: View = getRelplyDialogView()
+
+        // get AlertDialog.Builder
+        val builder = getAlertDialogBuilder(view)
+
+        return builder.create()
+    }
+
+    private fun getAlertDialogBuilder(view: View) : AlertDialog.Builder {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle("댓글작성")
             .setView(view)
@@ -57,7 +66,12 @@ class ReplyDialogFragment(activity: Activity, contentId: String, replyViewModel:
                 )
             }
             .setNegativeButton("취소", null)
-        return builder.create()
+        return builder
+    }
+
+    private fun getRelplyDialogView(): View {
+        val view: View = activity.layoutInflater.inflate(R.layout.reply_dialog, null)
+        return view
     }
 
     private fun initSharedPreferences() {

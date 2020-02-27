@@ -21,59 +21,89 @@ import kr.co.ldcc.contentsservice.model.vo.BookmarkVo
 import kr.co.ldcc.contentsservice.model.vo.ReplyVo
 
 class ContentsActivity : AppCompatActivity() {
+
     lateinit var replyViewModel: ReplyViewModel
     lateinit var bookmarkViewModel: BookmarkViewModel
     lateinit var sharedPreferences: SharedPreferences
-    var userId: String
-    var profile: String
-    init {
-        userId = "사용자 아이디"
-        profile = "사용자 프로필"
-    }
+    lateinit var thumbnail: String
+    lateinit var contentType: String
+    lateinit var datetime: String
+    lateinit var url: String
+    lateinit var title: String
+    lateinit var contentId: String
+    lateinit var userId: String
+    lateinit var profile: String
+    lateinit var displayMetrics : DisplayMetrics
 
+
+    var replyAdapter: ReplyAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contents)
-        val intent: Intent = getIntent()
-        var thumbnail: String = intent.getStringExtra("thumbnail")
-        var contentType: String = intent.getStringExtra("contentType")
-        var datetime: String = intent.getStringExtra("datetime")
-        var displayMetrics: DisplayMetrics = applicationContext.resources.displayMetrics;
-        var width: Int = displayMetrics.widthPixels;
-        var height: Int = displayMetrics.heightPixels;
-        var url = ""
-        var title = ""
-        intent.getStringExtra("title")?.let {
-            title = it
-        }
-        intent.getStringExtra("url")?.let {
-            url = it
-        }
 
-        var contentId: String = when (contentType) {
-            "Bookmark" -> intent.getStringExtra("contentId")
-            "Image" -> thumbnail.substring(thumbnail.lastIndexOf("/") + 1)
-            "Video" -> url.substring(url.lastIndexOf("v=") + 2)
-            else -> throw NoSuchFieldError()
-        }
+        var intent = getIntent()
+        initIntent(intent)
 
+        displayMetrics = applicationContext.resources.displayMetrics
+        val height = displayMetrics.heightPixels
+        val width = displayMetrics.widthPixels
 
-        // SharedPreferences 불러오기
+        // SharedPreferences
         initSharedPreferences()
-        buttonBookmark.isSelected = false
 
+        // init ViewModel
+        initViewModel()
 
-        bookmarkViewModel = ViewModelProviders.of(this).get(BookmarkViewModel::class.java)
+        // init ButtonListener
+        initButtonListener()
 
-        bookmarkViewModel.getOne(userId,contentId).observe(this, Observer {
-            it?.let{
+        // Observer
+        initObserver()
+
+        // init Contents Info
+        initContentsInfo()
+    }
+
+    private fun initContentsInfo() {
+        Glide.with(applicationContext)
+            .load(thumbnail)
+            .apply(
+                RequestOptions().override(
+                    displayMetrics.widthPixels,
+                    displayMetrics.heightPixels / 3
+                )
+            )
+            .into(imageView)
+        var linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recyclerViewReply.layoutManager = linearLayoutManager
+    }
+
+    private fun initObserver() {
+        bookmarkViewModel.getOne(userId, contentId).observe(this, Observer {
+            it?.let {
                 buttonBookmark.isSelected = true
-            }?: run{
+            } ?: run {
                 buttonBookmark.isSelected = false
             }
         })
 
+        replyViewModel.getAll(contentId)?.let {
+            it.observe(this, Observer<List<ReplyVo>> { replyVos ->
+
+                textViewReplyCount.text = replyVos.size.toString()
+                replyAdapter?.let { replyAdapter ->
+                    replyAdapter.replyVos = ArrayList(replyVos)
+                    replyAdapter.notifyDataSetChanged()
+                } ?: run {
+                    replyAdapter = ReplyAdapter(this, ArrayList(replyVos))
+                    recyclerViewReply.adapter = replyAdapter
+                }
+            })
+        }
+    }
+
+    private fun initButtonListener() {
         buttonBookmark.setOnClickListener {
             if (buttonBookmark.isSelected == true) {
                 bookmarkViewModel.delete(userId, contentId)
@@ -93,36 +123,39 @@ class ContentsActivity : AppCompatActivity() {
             }
         }
 
-        val buttonReplyWrite = findViewById(R.id.buttonReplyWrite) as Button
-        replyViewModel = ViewModelProviders.of(this).get(ReplyViewModel::class.java)
-
-        Glide.with(applicationContext)
-            .load(thumbnail)
-            .apply(RequestOptions().override(width, height / 3))
-            .into(imageView)
-        var linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerViewReply.layoutManager = linearLayoutManager
-        var replyAdapter: ReplyAdapter? = null
-
         buttonReplyWrite.setOnClickListener {
             val replyDialogFragment = ReplyDialogFragment(this, contentId, replyViewModel)
             val manager = supportFragmentManager
             replyDialogFragment.show(manager, "replyDialog")
-//            replyViewModel.insert(ReplyVo(userId, profile, "test", contentId))
+        }
+    }
+
+    private fun initViewModel() {
+        bookmarkViewModel = ViewModelProviders.of(this).get(BookmarkViewModel::class.java)
+        replyViewModel = ViewModelProviders.of(this).get(ReplyViewModel::class.java)
+    }
+
+    private fun initIntent(intent: Intent) {
+        thumbnail = intent.getStringExtra("thumbnail")
+        contentType = intent.getStringExtra("contentType")
+        datetime = intent.getStringExtra("datetime")
+
+        intent.getStringExtra("title")?.let {
+            title = it
+        } ?: run {
+            title = ""
+        }
+        intent.getStringExtra("url")?.let {
+            url = it
+        } ?: run {
+            url = "url"
         }
 
-        replyViewModel.getAll(contentId)?.let {
-            it.observe(this, Observer<List<ReplyVo>> { replyVos ->
-
-                textViewReplyCount.text = replyVos.size.toString()
-                replyAdapter?.let { replyAdapter ->
-                    replyAdapter.replyVos = ArrayList(replyVos)
-                    replyAdapter.notifyDataSetChanged()
-                } ?: run {
-                    replyAdapter = ReplyAdapter(this, ArrayList(replyVos))
-                    recyclerViewReply.adapter = replyAdapter
-                }
-            })
+        contentId = when (contentType) {
+            "Bookmark" -> intent.getStringExtra("contentId")
+            "Image" -> thumbnail.substring(thumbnail.lastIndexOf("/") + 1)
+            "Video" -> url.substring(url.lastIndexOf("v=") + 2)
+            else -> throw NoSuchFieldError()
         }
     }
 

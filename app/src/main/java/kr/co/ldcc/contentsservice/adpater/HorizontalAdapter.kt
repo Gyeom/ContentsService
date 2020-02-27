@@ -3,6 +3,7 @@ package kr.co.ldcc.contentsservice.adpater
 import android.content.Context
 import android.content.Intent
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -12,7 +13,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import kotlinx.android.synthetic.main.container_recyclerview_item.view.*
 import kotlinx.android.synthetic.main.contents_recyclerview_item.view.*
+import kotlinx.android.synthetic.main.contents_recyclerview_item.view.textViewTitle
 import kr.co.ldcc.contentsservice.R
 import kr.co.ldcc.contentsservice.activity.ContentsActivity
 import kr.co.ldcc.contentsservice.model.vo.ContentVo
@@ -97,6 +100,7 @@ class HorizontalAdapter(
                         intent.putExtra("contentType", "Bookmark")
                         intent.putExtra("contentId", (layoutVo as ArrayList<BookmarkVo>).get(position).contentId)
                     }
+
                     intent.putExtra("datetime",datetime)
                     intent.putExtra("thumbnail", thumbnail)
                     intent.putExtra("title", title)
@@ -134,7 +138,9 @@ class HorizontalAdapter(
                 .load((layoutVo as ArrayList<ImageVo>).get(position).thumbnail_url)
                 .apply(RequestOptions().override((width / 2.8).toInt(), height / 8))
                 .into(holder.itemView.imageViewContents)
+
         } else if (type == Type.CONTENT) {
+            Log.d("Test",position.toString())
             if ((layoutVo as ArrayList<ContentVo>).get(position).type == Type.VIDEO) {
                 holder.itemView.textViewTitle.text =
                     ((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).title
@@ -142,6 +148,7 @@ class HorizontalAdapter(
                     .load(((layoutVo as ArrayList<ContentVo>).get(position).item as VideoVo).thumbnail)
                     .apply(RequestOptions().override(width / 3, height / 8))
                     .into(holder.itemView.imageViewContents)
+
             } else {
                 holder.itemView.textViewTitle.text = ""
                 Glide.with(context)
@@ -149,6 +156,7 @@ class HorizontalAdapter(
                     .apply(RequestOptions().override((width / 2.8).toInt(), height / 8))
                     .into(holder.itemView.imageViewContents)
             }
+
         } else if (type == Type.BOOKMARK){
             holder.itemView.textViewTitle.text =
                 (layoutVo as ArrayList<BookmarkVo>).get(position).title
@@ -157,6 +165,8 @@ class HorizontalAdapter(
                 .into(holder.itemView.imageViewContents)
         }
     }
+
+
 
     override fun getItemCount(): Int {
         layoutVo ?: run {
